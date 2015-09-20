@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Mocks不是Stubs(Mocks Aren&#39;t Stubs) | 猫舍</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。
+为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，翻译的水准还不错，可惜没翻完，就让我来把未完的事画个句点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mocks不是Stubs(Mocks Aren't Stubs)">
+<meta property="og:url" content="http://blankpapers.com/2015/09/11/mocks-are-not-stubs/index.html">
+<meta property="og:site_name" content="猫舍">
+<meta property="og:description" content="最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。
+为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，翻译的水准还不错，可惜没翻完，就让我来把未完的事画个句点。">
+<meta property="og:image" content="http://blankpapers.com/assets/img/mocks-and-stubs.png">
+<meta property="og:updated_time" content="2015-09-18T03:47:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mocks不是Stubs(Mocks Aren't Stubs)">
+<meta name="twitter:description" content="最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。
+为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，翻译的水准还不错，可惜没翻完，就让我来把未完的事画个句点。">
+  
+    <link rel="alternative" href="/atom.xml" title="猫舍" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/avatar.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">3mi1yc@t</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">沉默的大多数喵</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/tags/随笔">随笔</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/jiukunz" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/test/" style="font-size: 10px;">test</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">3mi1yc@t</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">3mi1yc@t</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">沉默的大多数喵</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/jiukunz" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-mocks-are-not-stubs" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/11/mocks-are-not-stubs/" class="article-date">
+  	<time datetime="2015-09-11T05:43:21.000Z" itemprop="datePublished">2015-09-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mocks不是Stubs(Mocks Aren&#39;t Stubs)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/test/">test</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/assets/img/mocks-and-stubs.png" alt="mock&amp;stub"></p>
+<p>最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。</p>
+<p>为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，翻译的水准还不错，可惜没翻完，就让我来把未完的事画个句点。</p>
+<a id="more"></a>
+<h3 id="dennis-xlc翻译部分"><strong>dennis-xlc翻译部分</strong></h3><p><em>译者注： 本文是<a href="http://martinfowler.com/" target="_blank" rel="external">Martin Fowler</a>大神的<a href="http://martinfowler.com/articles/mocksArentStubs.html" target="_blank" rel="external">Mocks Aren’t Stubs</a>文章的中文翻译。由于该文是对mock对象和stub对象的探讨，故此译文中将不对mock和stub进行翻译，以避免混淆。</em></p>
+<p>The term ‘Mock Objects’ has become a popular one to describe special case objects that mimic real objects for testing. Most language environments now have frameworks that make it easy to create mock objects. What’s often not realized, however, is that mock objects are but one form of special case test object, one that enables a different style of testing. In this article I’ll explain how mock objects work, how they encourage testing based on behavior verification, and how the community around them uses them to develop a different style of testing.</p>
+<p>在测试领域中， ‘mock对象’已经成为一个流行术语，通常用来描述模拟真实对象的一类特殊对象。现在大部分语言都存在能够轻松地创建mock对象的框架。 但是， 通常人们都没有意识到，对于不同类型的测试中使用的特殊测试对象而言， mock对象仅仅是其中的一种而已。本文将会介绍mock对象是如何工作的、如何推进基于行为验证的测试以及社区是如何利用它来开发不同类型的测试。</p>
+<p>I first came across the term “mock object” a few years ago in the XP community. Since then I’ve run into mock objects more and more. Partly this is because many of the leading developers of mock objects have been colleagues of mine at ThoughtWorks at various times. Partly it’s because I see them more and more in the XP-influenced testing literature.</p>
+<p>我是几年前在XP(极限编程)社区中第一次接触到“mock对象”这个术语。之后我就越来越多地看到mock对象一词。一部分原因是很多mcok对象方面顶尖的开发者不时地成为我在ThoughtWorks的同事，还有部分原因是在受XP影响的测试讲座中我越来越多地看到mock对象的身影。</p>
+<p>But as often as not I see mock objects described poorly. In particular I see them often confused with stubs - a common helper to testing environments. I understand this confusion - I saw them as similar for a while too, but conversations with the mock developers have steadily allowed a little mock understanding to penetrate my tortoiseshell cranium.</p>
+<p>然而，大多数情况人们都没有恰当地理解mock对象。实际上我经常看到人们将mock对象和stubs这个常用于测试的公共类混淆起来。 我可以理解这种困惑，因为之前有段时间我也将两者视为类似的东西，但之后与mock开发者的交流中我终于茅塞顿开，对mock有了更深的理解。</p>
+<p>This difference is actually two separate differences. On the one hand there is a difference in how test results are verified: a distinction between state verification and behavior verification. On the other hand is a whole different philosophy to the way testing and design play together, which I term here as the classical and mockist styles of Test Driven Development.</p>
+<p>两者其实存在两大区别。 首先，在如何验证结果方面，两者存在差异： 一个是状态的验证，一个是行为的验证。 其次，在测试和设计相结合的理念上两者大相径庭。 我将这种两者分别称作测试驱动开发的传统风格和mock风格(mockist)。</p>
+<p>(In the earlier version of this essay I had realized there was a difference, but combined the two differences together. Since then my understanding has improved, and as a result it’s time to update this essay. If you haven’t read the previous essay you can ignore my growing pains, I’ve written this essay as if the old version doesn’t exist. But if you are familiar with the old version you may find it helpful to note that I’ve broken the old dichotomy of state based testing and interaction based testing into the state/behavior verification dichotomy and the classical/mockist TDD dichotomy. I’ve also adjusted my vocabulary to match that of the Gerard Meszaros’s <a href="http://xunitpatterns.com/" target="_blank" rel="external">xUnit patterns book</a>.)</p>
+<p>(在本文的早些版本里，我已意识到这两者之间存在区别，但我将这两个区别合二为一了。从那之后我对此的理解逐渐加深，所以现在是时候更新本文。如果你没有看过之前的版本，那么请忽略我这成长的苦恼。我是假设不存在旧版本的前提下写本文的。但如果你对旧版本有所了解，你会发现旧版本中我将两者的不同分为基于状态的测试和基于交互的测试，而本文中我将不同点改为状态的验证和行为的验证。同时，我也借鉴Gerard Meszaros的<a href="http://xunitpatterns.com/" target="_blank" rel="external">xUnit模式</a>一书的术语来调整我的措辞。)</p>
+<h3 id="常规测试（Regular_Tests）">常规测试（Regular Tests）</h3><p>I’ll begin by illustrating the two styles with a simple example. (The example is in Java, but the principles make sense with any object-oriented language.) We want to take an order object and fill it from a warehouse object. The order is very simple, with only one product and a quantity. The warehouse holds inventories of different products. When we ask an order to fill itself from a warehouse there are two possible responses. If there’s enough product in the warehouse to fill the order, the order becomes filled and the warehouse’s amount of the product is reduced by the appropriate amount. If there isn’t enough product in the warehouse then the order isn’t filled and nothing happens in the warehouse.</p>
+<p>我将通过一个简单的例子来阐述这两种不同的风格。(该例子用Java实现，但其中原理适用于任何面向对象的语言。)我们有一个订单对象，还有一个仓库对象来处理该订单对象。该订单非常简单，只有一个产品和一个数量。仓库则保存着不同产品的库存量。当我们使用一个仓库对象来处理一个订单对象时可能会有两种结果。假如仓库拥有足够的产品来处理该订单，该订单状态变成已处理，同时仓库中产品的数量减掉该订单中的数量。如果仓库没有足够的产品，则改订单状态变为未处理，仓库状态保持不变。</p>
+<p>These two behaviors imply a couple of tests, these look like pretty conventional JUnit tests.</p>
+<p>这两种行为对应一系列测试，这些测试看起来很像常见的JUnit测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderStateTester</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String HIGHLAND_PARK = <span class="string">"Highland Park"</span>;</span><br><span class="line">  <span class="keyword">private</span> Warehouse warehouse = <span class="keyword">new</span> WarehouseImpl();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    warehouse.add(TALISKER, <span class="number">50</span>);</span><br><span class="line">    warehouse.add(HIGHLAND_PARK, <span class="number">25</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderIsFilledIfEnoughInWarehouse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">    order.fill(warehouse);</span><br><span class="line">    assertTrue(order.isFilled());</span><br><span class="line">    assertEquals(<span class="number">0</span>, warehouse.getInventory(TALISKER));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderDoesNotRemoveIfNotEnough</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">    order.fill(warehouse);</span><br><span class="line">    assertFalse(order.isFilled());</span><br><span class="line">    assertEquals(<span class="number">50</span>, warehouse.getInventory(TALISKER));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>xUnit tests follow a typical four phase sequence: setup, exercise, verify, teardown. In this case the setup phase is done partly in the setUp method (setting up the warehouse) and partly in the test method (setting up the order). The call to <strong>order.fill</strong> is the exercise phase. This is where the object is prodded to do the thing that we want to test. The assert statements are then the verification stage, checking to see if the exercised method carried out its task correctly. In this case there’s no explicit teardown phase, the garbage collector does this for us implicitly.</p>
+<p>xUnit测试遵循典型的4个阶段：启动(setup)，执行(exercise)，验证(verify)，关闭(teardown)。在这个例子中，启动阶段有一部分是在<code>setUp</code>方法完成的(初始化仓库)，还有一部分是在测试方法里完成的(初始化订单)。<strong>order.fill</strong>方法会在执行阶段中调用。执行阶段中测试对象以我们想要测试的方式来执行。断言语句就是验证阶段，主要检查执行阶段中的方法是否正确地完成了任务。在这个例子中没有显式的关闭阶段，因为垃圾回收器会隐式地做清理。</p>
+<p>During setup there are two kinds of object that we are putting together. Order is the class that we are testing, but for <strong>Order.fill</strong> to work we also need an instance of Warehouse. In this situation Order is the object that we are focused on testing. Testing-oriented people like to use terms like object-under-test or system-under-test to name such a thing. Either term is an ugly mouthful to say, but as it’s a widely accepted term I’ll hold my nose and use it. Following Meszaros I’ll use System Under Test, or rather the abbreviation SUT.</p>
+<p>在启动阶段中我们将两类对象放到了一起。<code>Order</code>类是我们要测试的类，但<strong>Order.fill</strong>方法执行的时候还需要一个<code>Warehouse</code>的实例。这种情况下我们关注点是<code>Order</code>类。面向测试的人喜欢称这类事物为<code>测试对象</code>(object-under-test)或<code>测试系统</code>(system-under-test)。这两个词都相当拗口，但由于这些术语已经深入人心，我也只好勉为其难地使用它们。参照Meszaros我将用<code>测试系统</code>(System Under Test)一词，或者它的缩写<code>SUT</code>。</p>
+<p>So for this test I need the SUT (<strong>Order</strong>) and one collaborator (<strong>warehouse</strong>). I need the warehouse for two reasons: one is to get the tested behavior to work at all (since <strong>Order.fill</strong> calls warehouse’s methods) and secondly I need it for verification (since one of the results of Order.fill is a potential change to the state of the warehouse). As we explore this topic further you’ll see there we’ll make a lot of the distinction between SUT and collaborators. (In the earlier version of this article I referred to the SUT as the “primary object” and collaborators as “secondary objects”)</p>
+<p>在这个测试中我需要SUT(<strong>订单Order</strong>)和一个协作者(<strong>仓库</strong>)。需要用到仓库是基于以下两个原因：一是让测试可以正常执行(因为<strong>Order.fill</strong>方法要调用仓库的方法)，二是需要它来进行验证(因为Order.fill方法会改变仓库的状态)。随着对该话题的深入探讨，你将发现我们会严格区分SUT和协作者这两个概念。(在本文的早期版本中我称SUT为<code>“首要对象”</code>(primary object)，协作者成为<code>“辅助对象”</code>(secondary objects))。</p>
+<p>This style of testing uses <strong>state verification</strong>: which means that we determine whether the exercised method worked correctly by examining the state of the SUT and its collaborators after the method was exercised. As we’ll see, mock objects enable a different approach to verification.</p>
+<p>这种风格的测试使用的是<strong>状态验证</strong>：也就是在执行步骤结束后通过检查SUT和协作者的状态来判定执行阶段中的方法是否正常工作。接下来我们会看到mock对象是以另外一种方式来进行验证的。</p>
+<h3 id="基于mock对象的测试_(Tests_with_Mock_Objects)">基于mock对象的测试 (Tests with Mock Objects)</h3><p>Now I’ll take the same behavior and use mock objects. For this code I’m using the jMock library for defining mocks. jMock is a java mock object library. There are other mock object libraries out there, but this one is an up to date library written by the originators of the technique, so it makes a good one to start with.</p>
+<p>接下来我会用mock对象来实现相同的行为。下面的代码会使用jMock类库来创建mock对象。jMock是一个Java实现的mock对象类库。除此之外还有其他的类库，但jMock是由mock技术创始人所写的较新的类库，因此采用它作为开始是个不错的选择。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderInteractionTester</span> <span class="keyword">extends</span> <span class="title">MockObjectTestCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingRemovesInventoryIfInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//setup - data</span></span><br><span class="line">    <span class="comment">//启动阶段 - 数据部分</span></span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">    Mock warehouseMock = <span class="keyword">new</span> Mock(Warehouse.class);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setup - expectations</span></span><br><span class="line">    <span class="comment">// 启动阶段 - 期望部分</span></span><br><span class="line">    warehouseMock.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .with(eq(TALISKER),eq(<span class="number">50</span>))</span><br><span class="line">      .will(returnValue(<span class="keyword">true</span>));</span><br><span class="line">    warehouseMock.expects(once()).method(<span class="string">"remove"</span>)</span><br><span class="line">      .with(eq(TALISKER), eq(<span class="number">50</span>))</span><br><span class="line">      .after(<span class="string">"hasInventory"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//exercise</span></span><br><span class="line">    <span class="comment">// 执行阶段</span></span><br><span class="line">    order.fill((Warehouse) warehouseMock.proxy());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//verify</span></span><br><span class="line">    <span class="comment">// 验证阶段</span></span><br><span class="line">    warehouseMock.verify();</span><br><span class="line">    assertTrue(order.isFilled());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingDoesNotRemoveIfNotEnoughInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);    </span><br><span class="line">    Mock warehouse = mock(Warehouse.class);</span><br><span class="line">      </span><br><span class="line">    warehouse.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .withAnyArguments()</span><br><span class="line">      .will(returnValue(<span class="keyword">false</span>));</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouse.proxy());</span><br><span class="line"></span><br><span class="line">    assertFalse(order.isFilled());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>Concentrate on <strong>testFillingRemovesInventoryIfInStock</strong> first, as I’ve taken a couple of shortcuts with the later test.</p>
+<p>先着重看一下<code>testFillingRemovesInventoryIfInStock</code>方法，因为后面的例子会经常涉及该方法。</p>
+<p>To begin with, the setup phase is very different. For a start it’s divided into two parts: data and expectations. The data part sets up the objects we are interested in working with, in that sense it’s similar to the traditional setup. The difference is in the objects that are created. The SUT is the same - an order. However the collaborator isn’t a warehouse object, instead it’s a mock warehouse - technically an instance of the class <strong>Mock</strong>.</p>
+<p>首先，启动阶段就跟之前的大相迥异。这一阶段包含两部分：数据和期望。数据部分是对关注对象的初始化，这跟传统的启动阶段非常类似。不同之处在于对象的创建方式。SUT还是订单对象，但是协作者就不再是仓库对象，而是一个mock的仓库对象。从技术上来讲，该mock的仓库对象是<code>Mock</code>类的一个实例。</p>
+<p>The second part of the setup creates expectations on the mock object.The expectations indicate which methods should be called on the mocks when the SUT is exercised.</p>
+<p>启动阶段的第二部分是创建对mock对象的期望。所谓期望就是在SUT被执行时mock对象的哪些方法应该被调用。</p>
+<p>Once all the expectations are in place I exercise the SUT. After the exercise I then do verification, which has two aspects. I run asserts against the SUT - much as before. However I also verify the mocks - checking that they were called according to their expectations.</p>
+<p>一旦所有的期望都写好，我们就可以执行SUT的方法了。执行后接着就是验证，验证包括两方面。一方面跟之前一样我们会对SUT进行断言，另一方面我们也根据之前的期望对mock对象进行验证检查。</p>
+<p>The key difference here is how we verify that the order did the right thing in its interaction with the warehouse. With state verification we do this by asserts against the warehouse’s state. Mocks use <strong>behavior verification</strong>, where we instead check to see if the order made the correct calls on the warehouse. We do this check by telling the mock what to expect during setup and asking the mock to verify itself during verification. Only the order is checked using asserts, and if the the method doesn’t change the state of the order there’s no asserts at all.</p>
+<p>这里关键的区别在于我们如何验证订单对象(order)在与仓库对象的交互时是否做了对的事情。在状态验证里，我们是通过对仓库对象的状态进行断言。而mock采用的是行为验证，也就是检查订单对象是否正确地调用仓库对象的方法。我们在启动阶段告诉mock对象我们期望的行为，然后在验证阶段让mock对象来验证自己的行为是否符合期望。只有订单对象是通过断言来验证，如果该方法没有改变订单的状态，就根本不会有断言被触发。</p>
+<p>In the second test I do a couple of different things. Firstly I create the mock differently, using the mock method in MockObjectTestCase rather than the constructor. This is a convenience method in the jMock library that means that I don’t need to explicitly call verify later on, any mock created with the convenience method is automatically verified at the end of the test. I could have done this in the first test too, but I wanted to show the verification more explicitly to show how testing with mocks works.</p>
+<p>第二个测试跟之前的有些不同。首先是创建mock对象的方式不同，这里我调用mock方法而不是构造函数来创建mock对象。这是jMock类库中很方便也很常用的方法，它使我之后不用显示地调用verify方法。采用该方法创建的mock对象都会在测试方法结束时自动地进行验证。本来第一个测试也可以采用这种方式，但我想显示地给大家展示一下mock的验证过程，来阐述基于mock的测试是如何进行的。</p>
+<p>The second different thing in the second test case is that I’ve relaxed the constraints on the expectation by using withAnyArguments. The reason for this is that the first test checks that the number is passed to the warehouse, so the second test need not repeat that element of the test. If the logic of the order needs to be changed later, then only one test will fail, easing the effort of migrating the tests. As it turns out I could have left withAnyArguments out entirely, as that is the default.</p>
+<p>第二个测试中的另一个不同是我将期望部分的约束条件放松到<code>withAnyArguments</code>。这是因为在第一个测试中已经测试过传给仓库的数量，所以第二个测试就没必要重复这一部分的测试。如果以后订单对象的逻辑要改动，那么就只有一个测试会失败，这样就没减少重写测试的工作量。事实上我都可以完全不写<code>withAnyArguments</code>，因为这就是默认的。</p>
+<h3 id="EasyMock的使用_(Using_EasyMock)">EasyMock的使用 (Using EasyMock)</h3><p>There are a number of mock object libraries out there. One that I come across a fair bit is EasyMock, both in its java and .NET versions. EasyMock also enable behavior verification, but has a couple of differences in style with jMock which are worth discussing. Here are the familiar tests again:</p>
+<p>采用mock对象的类库还有很多，其中EasyMock是我遇到比较多的。EasyMock有Java和.NET两个版本。EasyMock同样支持行为的验证，但它的风格跟jMock却有点不同，这点很值得深入探讨。下面的测试还是我们熟悉的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderEasyTester</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> MockControl warehouseControl;</span><br><span class="line">  <span class="keyword">private</span> Warehouse warehouseMock;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    warehouseControl = MockControl.createControl(Warehouse.class);</span><br><span class="line">    warehouseMock = (Warehouse) warehouseControl.getMock();    </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingRemovesInventoryIfInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//setup - data</span></span><br><span class="line">    <span class="comment">//启动阶段 - 数据部分</span></span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setup - expectations</span></span><br><span class="line">    <span class="comment">// 启动阶段 - 期望部分</span></span><br><span class="line">    warehouseMock.hasInventory(TALISKER, <span class="number">50</span>);</span><br><span class="line">    warehouseControl.setReturnValue(<span class="keyword">true</span>);</span><br><span class="line">    warehouseMock.remove(TALISKER, <span class="number">50</span>);</span><br><span class="line">    warehouseControl.replay();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//exercise</span></span><br><span class="line">    <span class="comment">// 执行阶段</span></span><br><span class="line">    order.fill(warehouseMock);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//verify</span></span><br><span class="line">    <span class="comment">// 验证阶段</span></span><br><span class="line">    warehouseControl.verify();</span><br><span class="line">    assertTrue(order.isFilled());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingDoesNotRemoveIfNotEnoughInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);    </span><br><span class="line"></span><br><span class="line">    warehouseMock.hasInventory(TALISKER, <span class="number">51</span>);</span><br><span class="line">    warehouseControl.setReturnValue(<span class="keyword">false</span>);</span><br><span class="line">    warehouseControl.replay();</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouseMock);</span><br><span class="line"></span><br><span class="line">    assertFalse(order.isFilled());</span><br><span class="line">    warehouseControl.verify();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>EasyMock uses a record/replay metaphor for setting expectations. For each object you wish to mock you create a control and mock object. The mock satisfies the interface of the secondary object, the control gives you additional features. To indicate an expectation you call the method, with the arguments you expect on the mock. You follow this with a call to the control if you want a return value. Once you’ve finished setting expectations you call replay on the control - at which point the mock finishes the recording and is ready to respond to the primary object. Once done you call verify on the control.</p>
+<p>EasyMock使用<code>记录/重现</code>这一模式来设置期望。对于每一个要mock的对象都创建一个控制对象和mock对象。mock对象用于满足辅助对象的接口，而控制对象而用于提供更多的特性。 我们通过调用<code>mock对象</code>的方法，并将期望的参数传给该方法，以此来描述一个期望。同样地，我们可以通过调用<code>控制对象</code>的方法来获得一个返回值。一旦所有的期望都设置完毕，我们就可以调用<code>控制对象</code>的replay方法，因为此时<code>mock对象</code>已经完成记录(recording)，随时可以响应<code>首要对象</code>的调用。上述步骤完成后我们就可以调用<code>控制对象</code>的verify方法。</p>
+<p>It seems that while people are often fazed at first sight by the record/replay metaphor, they quickly get used to it. It has an advantage over the constraints of jMock in that you are making actual method calls to the mock rather than specifying method names in strings. This means you get to use code-completion in your IDE and any refactoring of method names will automatically update the tests. The downside is that you can’t have the looser constraints.</p>
+<p>第一眼看到<code>记录/重现</code>这种模式时，貌似大家都会感到很困扰，但很快就又习惯了。相对于jMock使用的约束，这种模式有个好处，就是你可以直接调用<code>mock对象</code>的方法，而不是通过指定该方法名字的字符串。这就意味着你可以利用起IDE中的代码补全功能，同时任何对方法名字的重构都可以自动更新测试代码。但缺点是无法做到更为宽松的约束。</p>
+<p>The developers of jMock are working on a new version which will use other techniques to allow you use actual method calls.</p>
+<p>jMock开发者正在开发新的版本，用其他技术来支持直接调用mock对象的方法。</p>
+<h3 id="Mock和stub的区别(The_Difference_Between_Mocks_and_Stubs)">Mock和stub的区别(The Difference Between Mocks and Stubs)</h3><p>When they were first introduced, many people easily confused mock objects with the common testing notion of using stubs. Since then it seems people have better understood the differences (and I hope the earlier version of this paper helped). However to fully understand the way people use mocks it is important to understand mocks and other kinds of test doubles. (“doubles”? Don’t worry if this is a new term to you, wait a few paragraphs and all will be clear.)</p>
+<p>当mock对象第一次出现时，大家很容易将它跟常见的stub概念混淆起来。渐渐地，大家似乎对这两者的区别也有了更深入的理解(希望本文的旧版本在这过程能有所帮助)。然而，想要更加透彻地理解mock对象的使用，那么理解mock对象和其他形式的<code>测试替身</code>就尤为重要。(没有听过”替身”这个术语?没关系!接下来的几个段落会帮你弄明白的。)</p>
+<p>When you’re doing testing like this, you’re focusing on one element of the software at a time -hence the common term unit testing. The problem is that to make a single unit work, you often need other units - hence the need for some kind of warehouse in our example.</p>
+<p>按照上述方式进行测试时，你一次只关注软件的一个元素(这就是单元测试的基本概念)。但问题在于，为了让一个单元工作，你往往需要其他的单元，也就是我们的例子中的仓库对象。</p>
+<p>In the two styles of testing I’ve shown above, the first case uses a real warehouse object and the second case uses a mock warehouse, which of course isn’t a real warehouse object. Using mocks is one way to not use a real warehouse in the test, but there are other forms of unreal objects used in testing like this.</p>
+<p>上述的两种类型的测试中，第一种使用的是一个真实的仓库对象，而第二种使用的是一个mock的仓库(显然这并不是真实的仓库对象)。在这个测试中，使用mock对象仅仅是不用真实的仓库对象的一种方式，实际中还有很多其他形式的不使用真实对象技术来进行测试。</p>
+<p>The vocabulary for talking about this soon gets messy - all sorts of words are used: stub, mock, fake, dummy. For this article I’m going to follow the vocabulary of Gerard Meszaros’s book. It’s not what everyone uses, but I think it’s a good vocabulary and since it’s my essay I get to pick which words to use.</p>
+<p>探讨这个话题时涉及很多诸如stub、mock、fake、dummy等词汇，很快就会使人迷失掉。这篇文章里我打算使用Gerard Meszaros的书中使用的术语。虽然这些术语并非所有人都这么用，但我觉得这些词汇真的很不错。还有就是因为在自己的文章里我有权利选择使用什么样的词汇。</p>
+<hr>
+<p><strong> dennis-xlc翻译部分完 <a href="http://blog.xulvcai.asia/2015/08/06/mocks-are-not-stubs-translation" target="_blank" rel="external">http://blog.xulvcai.asia/2015/08/06/mocks-are-not-stubs-translation</a> </strong></p>
+<h2 id="笔者翻译部分"><strong> 笔者翻译部分</strong></h2><p>Meszaros uses the term Test Double as the generic term for any kind of pretend object used in place of a real object for testing purposes. The name comes from the notion of a Stunt Double in movies. (One of his aims was to avoid using any name that was already widely used.) Meszaros then defined four particular kinds of double:</p>
+<p>为完成测试任务，我们会用假的辅助对象来代替真实的对象，Meszaros 使用 Test Doubles 这个词来表示这些假冒的对象。这个名字来源于电影中的替身演员的概念。(使用这个名字的一个目的是为了避免与已存在的一些词产生歧义。）Maszaros 定义了四种典型的 Test Double：</p>
+<ul>
+<li><strong>Dummy</strong> objects are passed around but never actually used. Usually they are just used to fill parameter lists.</li>
+<li><strong>Fake</strong> objects actually have working implementations, but usually take some shortcut which makes them not suitable for production (an in memory database is a good example).</li>
+<li><strong>Stubs</strong> provide canned answers to calls made during the test, usually not responding at all to anything outside what’s programmed in for the test. Stubs may also record information about calls, such as an email gateway stub that remembers the messages it ‘sent’, or maybe only how many messages it ‘sent’.</li>
+<li><p><strong>Mocks</strong> are what we are talking about here: objects pre-programmed with expectations which form a specification of the calls they are expected to receive.</p>
+</li>
+<li><p><strong>Dummy</strong> 对象被传来传去，但从来不会被使用，它们常被用来填充参数列表。</p>
+</li>
+<li><strong>Fake</strong> 对象是一种可工作的实现，但一般会用比较简单快捷的方式来实现，不适用于产品环境（比如在测试中用内存数据库代替可持久化的数据库）。</li>
+<li><strong>Stub</strong> 对象在测试中被调用时，会返回固定的结果，通常不会返回任何真实对象的内部逻辑。Stub可能还会记录关于如何调用的一些信息，例如 email gateway stub 会记录它「发出」的邮件内容，或者发出了多少封邮件。</li>
+<li><strong>Mocks</strong> 是我们在这里提到的：mock 对象预先定义一些期望发生的行为，相当于形成了一套规范，当测试对象被调用是，来检查 mock 对象的行为是不是与规范一致。</li>
+</ul>
+<p>Of these kinds of doubles, only mocks insist upon behavior verification. The other doubles can, and usually do, use state verification. Mocks actually do behave like other doubles during the exercise phase, as they need to make the SUT believe it’s talking with its real collaborators - but mocks differ in the setup and the verification phases.</p>
+<p>在各种的 Test Double 中，只有 Mocks 是对行为进行验证。其它的 Test Double 一般是对状态进行验证。Mocks 在执行上实际跟其它的 Test Double 类似，都是为了让 SUT 相信，它正在与真实的协作者交互， 但 Mocks 在准备阶段和验证阶段与其它的 Test Double 不同。</p>
+<p>To explore test doubles a bit more, we need to extend our example. Many people only use a test double if the real object is awkward to work with. A more common case for a test double would be if we said that we wanted to send an email message if we failed to fill an order. The problem is that we don’t want to send actual email messages out to customers during testing. So instead we create a test double of our email system, one that we can control and manipulate.</p>
+<p>再深入一点研究 Test Double， 我们需要对之前的例子加强一下。很多人只有在真实的对象很难构造的情况下才使用 Test Double。对于 Test Double 更加常用的场景是：如果我们订单填写错误，我们想要收到一封邮件。问题是在测试中，我们不想真的向我们的客户发一封邮件，因此取而代之，邮件系统会被模拟成我们可以完全控制的 Test Double 对象。</p>
+<p>Here we can begin to see the difference between mocks and stubs. If we were writing a test for this mailing behavior, we might write a simple stub like this.</p>
+<p>这里我们就可以看到 mocks 和 stubs 的区别了。如果我们想要给发邮件的行为写一个测试，我们可以写一个简单的 stub ，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MailService</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span> <span class="params">(Message msg)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailServiceStub</span> <span class="keyword">implements</span> <span class="title">MailService</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> List&lt;Message&gt; messages = <span class="keyword">new</span> ArrayList&lt;Message&gt;();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span> <span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">    messages.add(msg);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numberSent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> messages.size();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We can then use state verification on the stub like this.<br>这样我们就可以使用 stub 进行状态验证了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderStateTester</span>...</span><br><span class="line">  <span class="title">public</span> <span class="title">void</span> <span class="title">testOrderSendsMailIfUnfilled</span>() </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">    MailServiceStub mailer = <span class="keyword">new</span> MailServiceStub();</span><br><span class="line">    order.setMailer(mailer);</span><br><span class="line">    order.fill(warehouse);</span><br><span class="line">    assertEquals(<span class="number">1</span>, mailer.numberSent());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>Of course this is a very simple test - only that a message has been sent. We’ve not tested it was sent to the right person, or with the right contents, but it will do to illustrate the point.</p>
+<p>当然这是一个很简单的测试 - 仅仅是一封邮件被发出去了，我们还没有测这封邮件是否被发到了正确的人，内容是否正确。下面我们会看到如何做。</p>
+<p>Using mocks this test would look quite different.<br>如果使用 mocks， 这个测试会看起来很不一样。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderInteractionTester</span>...</span><br><span class="line">  <span class="title">public</span> <span class="title">void</span> <span class="title">testOrderSendsMailIfUnfilled</span>() </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">    Mock warehouse = mock(Warehouse.class);</span><br><span class="line">    Mock mailer = mock(MailService.class);</span><br><span class="line">    order.setMailer((MailService) mailer.proxy());</span><br><span class="line"></span><br><span class="line">    mailer.expects(once()).method(<span class="string">"send"</span>);</span><br><span class="line">    warehouse.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .withAnyArguments()</span><br><span class="line">      .will(returnValue(<span class="keyword">false</span>));</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouse.proxy());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In both cases I’m using a test double instead of the real mail service. There is a difference in that the stub uses state verification while the mock uses behavior verification.</p>
+<p>在这两种情况下，我用 Test Double 来代替真实的 mail service。在这里有一点不同的是，stub 用来做状态验证，而 mocks 用来做行为验证。</p>
+<p>In order to use state verification on the stub, I need to make some extra methods on the stub to help with verification. As a result the stub implements MailService but adds extra test methods.</p>
+<p>为了在 stub 上做状态验证，我需要在 stub 上创建一些额外的方法，来辅助验证过程。如你所见，stub 实现了 MailService 但增加了额外的辅助测试的方法。</p>
+<p>Mock objects always use behavior verification, a stub can go either way. Meszaros refers to stubs that use behavior verification as a Test Spy. The difference is in how exactly the double runs and verifies and I’ll leave that for you to explore on your own.</p>
+<p>Mock 对象只能行为进行验证，而 stub 既可以验证行为，也可以验证状态。Meszaros 提到 stub 可以作为 Test Spy，来进行行为的验证。不同之处在于这个 double 具体如何运行并进行验证，我把这个问题留给你，你可以深入研究一下。</p>
+<h3 id="（Classical_和_Mockist_方式的测试）Classical_and_Mockist_Testing">（Classical 和 Mockist 方式的测试）Classical and Mockist Testing</h3><p>Now I’m at the point where I can explore the second dichotomy: that between classical and mockist TDD. The big issue here is when to use a mock (or other double).</p>
+<p>现在我们进入第二部分：在 TDD 时采用 classical 方式来还是采用 mockist 的方式。一个很大的问题就是什么时候应该使用 mock（或者其它 double）。</p>
+<p>The <strong>classical TDD</strong> style is to use real objects if possible and a double if it’s awkward to use the real thing. So a classical TDDer would use a real warehouse and a double for the mail service. The kind of double doesn’t really matter that much.</p>
+<p><strong>classical TDD</strong> 方式是：如果可能，尽量用真实对象测试；如果真实对象很难构造使用，那么可以使用 double。因此经典的 TDDer 在刚才的例子中会创建真实的仓库对象，而对 mail service 创建一个 double，这种 double 并不太重要。</p>
+<p>A <strong>mockist TDD</strong> practitioner, however, will always use a mock for any object with interesting behavior. In this case for both the warehouse and the mail service.</p>
+<p>然而 <strong>Mockist TDD</strong> 的践行者，总会 mock 掉任何有相关性的对象，在这个例子中，会 mock 仓库和 mail service 对象。</p>
+<p>Although the various mock frameworks were designed with mockist testing in mind, many classicists find them useful for creating doubles.</p>
+<p>虽然不同的 mock 框架是以各种 mockist 测试思想为基础来设计的，但很多 classicists 发现，这些框架在创建 double 方面很有用。</p>
+<p>An important offshoot of the mockist style is that of Behavior Driven Development (BDD). BDD was originally developed by my colleague Dan North as a technique to better help people learn Test Driven Development by focusing on how TDD operates as a design technique. This led to renaming tests as behaviors to better explore where TDD helps with thinking about what an object needs to do. BDD takes a mockist approach, but it expands on this, both with its naming styles, and with its desire to integrate analysis within its technique. I won’t go into this more here, as the only relevance to this article is that BDD is another variation on TDD that tends to use mockist testing. I’ll leave it to you to follow the link for more information.</p>
+<p>Mockist 风格的一个重要分支是行为驱动开发（BDD）。BDD 最初是由我的同事 Dan North 发明的，原本的目的是帮助人们理解测试驱动开发是如何帮助开发人员辅助代码设计的。BDD 通过把测试名称改为具体行为的名字，让你思考一个对象到底需要做什么事情，从而理解 TDD 在辅助设计方面的作用。BDD 采用了 mockist 的方案，但它扩展了这个方案，不仅在命名方面，还在使用这个技术做集成分析方面，在这里我就不深入探讨了。BDD 与这篇文章唯一相关的点在于，BDD 是 TDD 使用 mockist 测试方式的一个变种。我会留下它的参考链接，你可以获取更多关于它的信息。</p>
+<h3 id="不同方案之间的选择（Choosing_Between_the_Differences）">不同方案之间的选择（Choosing Between the Differences）</h3><p>In this article I’ve explained a pair of differences: state or behavior verification / classic or mockist TDD. What are the arguments to bear in mind when making the choices between them? I’ll begin with the state versus behavior verification choice.</p>
+<p>这这篇文章里，我讲了2个不同点：状态/行为验证 和 classical/mockist TDD。需要牢记于心的争论点在于 - 什么时候需要在它们之间做出选择？我们先从状态/行为验证讲起。</p>
+<p>The first thing to consider is the context. Are we thinking about an easy collaboration, such as order and warehouse, or an awkward one, such as order and mail service?</p>
+<p>第一个需要考虑的是上下文（context）。我们要考虑一下，我们是在处理一个简单的依赖关系，就像订单和仓库之间的关系一样；还是一个比较复杂的关系，例如订单和邮件服务。</p>
+<p>If it’s an easy collaboration then the choice is simple. If I’m a classic TDDer I don’t use a mock, stub or any kind of double. I use a real object and state verification. If I’m a mockist TDDer I use a mock and behavior verification. No decisions at all.</p>
+<p>如果这是一个比较简单的关系，那选择就简单了。如果我是一个 classic 风格的 TDDer，我不会使用 mock、stub 或者任何类型的 double。我会使用真实对象以及状态验证。如果我是一个 mockist 风格的 TDDer，我会用 mock 来做行为验证。完全不需要多想，直接选就好了。</p>
+<p>If it’s an awkward collaboration, then there’s no decision if I’m a mockist - I just use mocks and behavior verification. If I’m a classicist then I do have a choice, but it’s not a big deal which one to use. Usually classicists will decide on a case by case basis, using the easiest route for each situation.</p>
+<p>如果是一个比较复杂的关系，对 mockist 来说，也不需要选择 - 我只要用 mocks 以及行为验证就可以了。如果我是个 classicists，那么我确实需要做个选择，但要用哪种方式也没什么大不了的。通常 classicists 会具体问题具体分析，针对每一种情况都会采取最简单的方式。</p>
+<p>So as we see, state versus behavior verification is mostly not a big decision. The real issue is between classic and mockist TDD. As it turns out the characteristics of state and behavior verification do affect that discussion, and that’s where I’ll focus most of my energy.</p>
+<p>因此正如我们看到的，状态验证亦或是行为验证，大部分情况下都不难决定。真正的问题在于 classic TDD 和 mockist TDD 之间。因为在现实情况下，状态和行为验证各自所具备的特点确实会影响到最后的决策，这是我投入最多精力研究的地方。</p>
+<p>But before I do, let me throw in an edge case. Occasionally you do run into things that are really hard to use state verification on, even if they aren’t awkward collaborations. A great example of this is a cache. The whole point of a cache is that you can’t tell from its state whether the cache hit or missed - this is a case where behavior verification would be the wise choice for even a hard core classical TDDer. I’m sure there are other exceptions in both directions.</p>
+<p>但在我继续论述前，让我抛出一个边界情况。你确实会遇到，在一些情况下，很难使用状态验证，即使这些对象并不是复杂的依赖关系。cache 是一个比较典型的例子，cache 的关键点在于你无法从状态去区分是否 cache 被成功命中了 - 在这种情况下，即使对 classical TDDer 来说，行为验证可能也将是个明智的选择。我确定这两种方式都会有一些其它的例外情况。</p>
+<p>As we delve into the classic/mockist choice, there’s lots of factors to consider, so I’ve broken them out into rough groups.</p>
+<p>当我们深入研究了 classic/mockist 这两种选择后，会发现很多因素都需要考虑，因此我把它们进行了粗略的分组。</p>
+<h3 id="驱动型TDD（Driving_TDD）">驱动型TDD（Driving TDD）</h3><p>Mock objects came out of the XP community, and one of the principal features of XP is its emphasis on Test Driven Development - where a system design is evolved through iteration driven by writing tests.</p>
+<p>Mock 对象出自 XP 社区，XP的一个最重要的特征就是它强调测试驱动开发 - 在这里，系统通过迭代，由测试驱动更新。</p>
+<p>Thus it’s no surprise that the mockists particularly talk about the effect of mockist testing on a design. In particular they advocate a style called need-driven development. With this style you begin developing a user story by writing your first test for the outside of your system, making some interface object your SUT. By thinking through the expectations upon the collaborators, you explore the interaction between the SUT and its neighbors - effectively designing the outbound interface of the SUT.</p>
+<p>因此，mockists 专门谈论了 mockist 测试对于设计的影响就恨正常了。他们特别推崇一种称作是「需要驱动的开发」方式。使用这种方式，在你开始开发用户故事前，你会首先从你要开发的系统的外围系统的测试开始写起，会把接口对象当做 SUT（System Under Test）。通过思考各个对象互相之间的期望，来探索 SUT 和它的依赖对象之间的关系，这样就有效的设计了 SUT 外围系统的接口。</p>
+<p>Once you have your first test running, the expectations on the mocks provide a specification for the next step and a starting point for the tests. You turn each expectation into a test on a collaborator and repeat the process working your way into the system one SUT at a time. This style is also referred to as outside-in, which is a very descriptive name for it. It works well with layered systems. You first start by programming the UI using mock layers underneath. Then you write tests for the lower layer, gradually stepping through the system one layer at a time. This is a very structured and controlled approach, one that many people believe is helpful to guide newcomers to OO and TDD.</p>
+<p>一旦你第一个测试跑起来了，对 mocks 期待的返回结果为下一步的设计提供了指导规范，也可以作为下一步测试的起始点。你把每一个期待都转换为对依赖对象的测试，一次只选取一个 SUT，不断的重复这个过程。这种方式也被直白地称为「由外向内」。这种方式在分层系统中可以良好应用。刚开始，你通过 mock UI 的下层代码来写 UI层代码，然后你可以写更低层代码的测试，逐渐一步步、一层层的深入。这是一种非常结构化，而且容易控制的方案，很多人都觉得这种方式对于指导新人理解 OO（面向对象）和 TDD 是很有帮助的。</p>
+<p>Classic TDD doesn’t provide quite the same guidance. You can do a similar stepping approach, using stubbed methods instead of mocks. To do this, whenever you need something from a collaborator you just hard-code exactly the response the test requires to make the SUT work. Then once you’re green with that you replace the hard coded response with a proper code.</p>
+<p>经典的 TDD 的方法并不相同，你会用 stub 而不是 mocks，实现一个类似的一步步走的方案。想要做到这点，当你想从一个依赖对象那里得到一些返回值的时候，你只需要 hard-code 测试所需要的返回值，来使 SUT 可以工作。如果你觉得没问题了，你可以在真正的实现中把 hard code 替换成正确的代码。</p>
+<p>But classic TDD can do other things too. A common style is middle-out. In this style you take a feature and decide what you need in the domain for this feature to work. You get the domain objects to do what you need and once they are working you layer the UI on top. Doing this you might never need to fake anything. A lot of people like this because it focuses attention on the domain model first, which helps keep domain logic from leaking into the UI.</p>
+<p>但是经典 TDD 也会用其它方式。一种常见的方式是「由中间向两边」。用这种方式，如果你要做一个特性（feature），你要确定需要哪些领域模型才能让这个特性可以工作。然后你选取这些领域模型，把需要的方法添加进去，UI 层就是架构在领域模型的上层。使用这种方法，你可能完全不需要 fake 任何东西。很多人都喜欢这种方式，因为它首要关注领域模型，这样可以避免在 UI 逻辑中掺杂领域的业务逻辑。</p>
+<p>I should stress that both mockists and classicists do this one story at a time. There is a school of thought that builds applications layer by layer, not starting one layer until another is complete. Both classicists and mockists tend to have an agile background and prefer fine-grained iterations. As a result they work feature by feature rather than layer by layer.</p>
+<p>我还要强调一点，不管是 mockists 还是 classicist 都应该一次做一张故事卡片。从前有一个特别的思维方式，就是我们要一层一层的写应用程序，在某一层结束之前，就不开始新一层的编写。classicist 和 mockists 都是在敏捷的背景之下衍生出来的，倾向于采用细粒度的迭代方式，这样致使他们会一个特性一个特性的完成工作，而不是一层一层的。</p>
+<h3 id="Fixture_初始化（Fixture_Setup）">Fixture 初始化（Fixture Setup）</h3><p>With classic TDD, you have to create not just the SUT but also all the collaborators that the SUT needs in response to the test. While the example only had a couple of objects, real tests often involve a large amount of secondary objects. Usually these objects are created and torn down with each run of the tests.</p>
+<p>使用经典的 TDD 方法，你需要创建的不只是 SUT，SUT 测试所依赖的全部对象你也要创建。虽然在这个例子中只有2个对象，但真实的测试经常会涉及大量的从属对象。这些对象也伴随着测试的运行而生成，伴随着测试运行完成而消亡。</p>
+<p>Mockist tests, however, only need to create the SUT and mocks for its immediate neighbors. This can avoid some of the involved work in building up complex fixtures (At least in theory. I’ve come across tales of pretty complex mock setups, but that may be due to not using the tools well.)</p>
+<p>然而，对于 Mockist 测试来说，你只需要创建 SUT，对它直接依赖的对象，你只要 mock 就可以了。这可以避免一些创建复杂 fixtures（测试基础设施）的工作（至少理论上是这样的。我已经遇到过很多 mock 对象复杂的初始化过程，当然也可能因为我没有用对工具。）</p>
+<p>In practice, classic testers tend to reuse complex fixtures as much as possible. In the simplest way you do this by putting fixture setup code into the xUnit setup method. More complicated fixtures need to be used by several test classes, so in this case you create special fixture generation classes. I usually call these Object Mothers, based on a naming convention used on an early ThoughtWorks XP project. Using mothers is essential in larger classic testing, but the mothers are additional code that need to be maintained and any changes to the mothers can have significant ripple effects through the tests. There also may be a performance cost in setting up the fixture - although I haven’t heard this to be a serious problem when done properly. Most fixture objects are cheap to create, those that aren’t are usually doubled.</p>
+<p>在实践中，classic 风格的测试倾向于尽可能重用复杂的 fixtures。最简单的方式，你可以把 fixture 初始化的代码放到 xUnit 的初始化方法里。如果有更多的复杂的 fixture 需要被多个测试类来使用，那么在这种情况下，你需要创建一些专门的 fixture 生成器。我经常称这些为 Objects Mother，这个名字基于一个早期的 ThoughtWorks XP 项目的命名规范。在大型项目中，在 classic 测试中使用 mothers 是非常重要的，但是 mothers 的代码是需要额外维护的，任何对 mothers 的修改可能会对其它的测试造成巨大的连锁影响。在初始化 fixture 时可能还会有性能消耗 - 虽然我没听说过如果正确使用的话，这会是个严重的问题。大部分的 fixture 对象的创建是恨廉价的，一般我们不会去模拟(doubled)。</p>
+<p>As a result I’ve heard both styles accuse the other of being too much work. Mockists say that creating the fixtures is a lot of effort, but classicists say that this is reused but you have to create mocks with every test.</p>
+<p>由于上面的这些原因，以至于这两种方式都会指责对方会带来更多的工作量。Mockists 说创建 fixture 会带来很大的工作量，但 classicist 说 fixture 是可以重用的，而你们需要为每个测试都创建 mocks。</p>
+<h3 id="测试隔离（Test_Isolation）">测试隔离（Test Isolation）</h3><p>If you introduce a bug to a system with mockist testing, it will usually cause only tests whose SUT contains the bug to fail. With the classic approach, however, any tests of client objects can also fail, which leads to failures where the buggy object is used as a collaborator in another object’s test. As a result a failure in a highly used object causes a ripple of failing tests all across the system.</p>
+<p>如果你用 mockist 测试的方法引入了一个 bug，一般只会导致包含这个 bug 的 SUT 的测试失败。然而，如果使用的是 classic 方案，依赖这个有 bug 对象的所有对象对应的测试都有可能失败，因此，一个被高度依赖的对象如果出问题了，那么整个体统大量的测试都会失败。</p>
+<p>Mockist testers consider this to be a major issue; it results in a lot of debugging in order to find the root of the error and fix it. However classicists don’t express this as a source of problems. Usually the culprit is relatively easy to spot by looking at which tests fail and the developers can tell that other failures are derived from the root fault. Furthermore if you are testing regularly (as you should) then you know the breakage was caused by what you last edited, so it’s not difficult to find the fault.</p>
+<p>Mockist 测试者认为这是一个很大的问题，为了找出错误的根源并修复它，需要花费大量的调试时间。然而，classicists 并不认为这是问题的源头。通常通过看一下哪个测试失败了，罪魁祸首还是相对容易定位的，开发可以辨识出哪些其它的错误是由根上的错误引发的。而且，如果你有规律地进行测试（你也应该这样做），那么你就可以知道问题是由上次你修改的什么引发的，因此找出错误并不那么难。</p>
+<p>One factor that may be significant here is the granularity of the tests. Since classic tests exercise multiple real objects, you often find a single test as the primary test for a cluster of objects, rather than just one. If that cluster spans many objects, then it can be much harder to find the real source of a bug. What’s happening here is that the tests are too coarse grained.</p>
+<p>这里一个值得关注的点是测试的粒度。因为经典的测试会运用多个真实对象，你经常会发现某个测试会测一堆对象，而不是一个对象。如果这个测试会跨越到很多对象，那么就更难找到一个 bug 的真实源头了，这是由于测试粒度太粗导致的。</p>
+<p>It’s quite likely that mockist tests are less likely to suffer from this problem, because the convention is to mock out all objects beyond the primary, which makes it clear that finer grained tests are needed for collaborators. That said, it’s also true that using overly coarse grained tests isn’t necessarily a failure of classic testing as a technique, rather a failure to do classic testing properly. A good rule of thumb is to ensure that you separate fine-grained tests for every class. While clusters are sometimes reasonable, they should be limited to only very few objects - no more than half a dozen. In addition, if you find yourself with a debugging problem due to overly coarse-grained tests, you should debug in a test driven way, creating finer grained tests as you go.</p>
+<p>很可能 mockist 测试不太会被这个问题所困扰，因为惯例是 mock 掉所有主要对象以外的全部对象，对这些对象进行更细粒度的测试，这样会很清晰。也就是说，使用过于粗粒度的测试而导致的失败并不是由于 classic 测试技术导致的，避免这个问题的简单的做法，就是确保你为每个类都分离出了细粒度的测试。有的时候，对一堆对象的测试也是合理的，那它们也应该被限制到一个合适的数量 - 不要超过半打（6个）。另外，如果你发现由于测试粒度过于粗而导致了调试的问题，那么你应该使用测试驱动的方式来 debug，在 debug 过程中创建更多细粒度的测试。</p>
+<p>In essence classic xunit tests are not just unit tests, but also mini-integration tests. As a result many people like the fact that client tests may catch errors that the main tests for an object may have missed, particularly probing areas where classes interact. Mockist tests lose that quality. In addition you also run the risk that expectations on mockist tests can be incorrect, resulting in unit tests that run green but mask inherent errors.</p>
+<p>本质上说，经典的 xunit 测试并不仅仅是视单元测试，也包括迷你的集成测试。因此，很多人认同这样一个事实：如果对一个对象的的测试漏掉了，那么客户端可能会捕获到一些错误，特别是类与一些比较深的区域交互时。而Mockist 测试带来了质量的损失。另外，在mockist 测试中你可能模拟了错误的期望值，虽然单元测试绿了，但掩盖了内在的错误，这也会带来风险。</p>
+<p>It’s at this point that I should stress that whichever style of test you use, you must combine it with coarser grained acceptance tests that operate across the system as a whole. I’ve often come across projects which were late in using acceptance tests and regretted it.</p>
+<p>我还要强调一点，无论你用的是哪种测试类型，你都必须结合粗粒度的可以贯穿整个系统的验收测试。我经常碰到因为项目太迟使用验收测试而后悔不已。</p>
+<h3 id="与实现耦合的测试（Coupling_Tests_to_Implementations）">与实现耦合的测试（Coupling Tests to Implementations）</h3><p>When you write a mockist test, you are testing the outbound calls of the SUT to ensure it talks properly to its suppliers. A classic test only cares about the final state - not how that state was derived. Mockist tests are thus more coupled to the implementation of a method. Changing the nature of calls to collaborators usually cause a mockist test to break.</p>
+<p>当你写 mockist 测试的时候，你会测 SUT 的边界调用来保证它跟它的依赖对象是否协作良好。经典测试只会关心最终状态 - 而不是状态如何变迁。Mockist 测试与方法的实现耦合更严重。改变对协作者的真实调用会导致 mockist 测试挂掉。</p>
+<p>This coupling leads to a couple of concerns. The most important one is the effect on Test Driven Development. With mockist testing, writing the test makes you think about the implementation of the behavior - indeed mockist testers see this as an advantage. Classicists, however, think that it’s important to only think about what happens from the external interface and to leave all consideration of implementation until after you’re done writing the test.</p>
+<p>这种耦合导致了两个潜在问题，最重要的一个是对测试驱动开发的影响。使用 Mockist测试，写测试时你会想想如何实现 - mockist 测试者确实会把这视为一种优势。然而，Classicists 认为仅仅是考虑外部接口对内部的影响比较重要，具体实现可以留到你写完测试之后再考虑。</p>
+<p>Coupling to the implementation also interferes with refactoring, since implementation changes are much more likely to break tests than with classic testing.</p>
+<p>对实现的耦合也会妨碍到重构，如果实现改变了，与比经典测试的方式相比，这种方式更可能破坏测试，</p>
+<p>This can be worsened by the nature of mock toolkits. Often mock tools specify very specific method calls and parameter matches, even when they aren’t relevant to this particular test. One of the aims of the jMock toolkit is to be more flexible in its specification of the expectations to allow expectations to be looser in areas where it doesn’t matter, at the cost of using strings that can make refactoring more tricky.</p>
+<p>由于 mock 工具集的本质，这可能会更糟。通常，mock 工具会指定非常特定的方法调用和参数匹配，即使它们跟这些特定的测试不相关。jMock 工具的一个目标就是让期望判定规范更加灵活，允许期望在它不关心的领域更加松散，作为代价使用 string 可能会让重构更麻烦。</p>
+<h3 id="设计风格（Design_Style）">设计风格（Design Style）</h3><p>One of the most fascinating aspects of these testing styles to me is how they affect design decisions. As I’ve talked with both types of tester I’ve become aware of a few differences between the designs that the styles encourage, but I’m sure I’m barely scratching the surface.</p>
+<p>对我来说，这些测试观念最迷人的一点是它们如何影响设计决策。由于我曾经跟这两种类型的测试者都谈过，我已经认识到了一些这种测试所侧重的不同点，但我还是觉得我仅仅是粗知一二。</p>
+<p>I’ve already mentioned a difference in tackling layers. Mockist testing supports an outside-in approach while developers who prefer a domain model out style tend to prefer classic testing.</p>
+<p>在解决分层方面，我已经提过，这两种测试方式的不同点。Mockist 测试提供了一种由外而内的方案，而有些开发更倾向于从领域模型开始逐步向外开发的方式，他们则更喜欢经典的测试方式。</p>
+<p>On a smaller level I noticed that mockist testers tend to ease away from methods that return values, in favor of methods that act upon a collecting object. Take the example of the behavior of gathering information from a group of objects to create a report string. A common way to do this is to have the reporting method call string returning methods on the various objects and assemble the resulting string in a temporary variable. A mockist tester would be more likely to pass a string buffer into the various objects and get them to add the various strings to the buffer - treating the string buffer as a collecting parameter.</p>
+<p>在更低的层次上我注意到 mockist 测试者 ，不喜欢有返回值的方法，更喜欢作用在收集对象上的方法。举个例子，比如你想要从一组对象中收集信息来创建一个字符串报告。常用的完成这件事的方法是写一个reporting方法，返回一个string，传入一些对象，在一个临时的变量里组装这个结果字符串。Mockist 测试者会更想要传一个string buffer进这个传入的对象中，然后让它们把不同的字符串加到这个buffer中 - 就是用这个string buffer来收集参数。</p>
+<p>Mockist testers do talk more about avoiding ‘train wrecks’ - method chains of style of getThis().getThat().getTheOther(). Avoiding method chains is also known as following the Law of Demeter. While method chains are a smell, the opposite problem of middle men objects bloated with forwarding methods is also a smell. (I’ve always felt I’d be more comfortable with the Law of Demeter if it were called the Suggestion of Demeter.)</p>
+<p>Mockist 测试者会更多的谈到避免「列车残骸」（train wrecks）- 形如 getThis().getThat().getTheOther() 这样的链式方法调用。避免链式调用也被称为符合迪米特法则。虽然方法链是一种坏味道，但它的反面 - 用一大堆中间对象做方法转发也是一种坏味道。（我总是感觉迪米特法则如果被称为迪米特建议会更令人舒服一点。）</p>
+<p>One of the hardest things for people to understand in OO design is the <a href="http://martinfowler.com/bliki/TellDontAsk.html" target="_blank" rel="external">“Tell Don’t Ask” principle</a>, which encourages you to tell an object to do something rather than rip data out of an object to do it in client code. Mockists say that using mockist testing helps promote this and avoid the getter confetti that pervades too much of code these days. Classicists argue that there are plenty of other ways to do this.</p>
+<p>在面向对象设计中，人们最难理解的一件事就是<a href="http://martinfowler.com/bliki/TellDontAsk.html" target="_blank" rel="external">『不要问，讲出来』原则</a>，这会鼓励你去让一个对象去做一些事情，而不是把对象的数据扯出来，在客户端代码中来做。Mockist 认为使用 mockist 测试可以帮助提高这一点，并防止 getter 方法乱飞。Classicists 则争辩说，有大量其它的方法可以做到这些。</p>
+<p>An acknowledged issue with state-based verification is that it can lead to creating query methods only to support verification. It’s never comfortable to add methods to the API of an object purely for testing, using behavior verification avoids that problem. The counter-argument to this is that such modifications are usually minor in practice.</p>
+<p>基于状态验证的方法的一个的已知问题是，它会导致为了进行验证，会创建一些查询方法，仅仅为了测试。把一个测试方法加到对象的 API 中是绝不会令人舒服的一件事情，使用行为验证可以避免这个问题。它的反方观点认为，在实际中这种修正的影响往往比较小。</p>
+<p>Mockists favor role interfaces and assert that using this style of testing encourages more role interfaces, since each collaboration is mocked separately and is thus more likely to be turned into a role interface. So in my example above using a string buffer for generating a report, a mockist would be more likely to invent a particular role that makes sense in that domain, which may be implemented by a string buffer.</p>
+<p>Mockists 风格的接口和 assert 更加鼓励使用角色接口，因为每个依赖对象是单独 mock 的，因此最好转成一个角色接口。因此在我上的例子里，使用了 string buffer 来生成一份报告，mockist 会更想要去发明一个在领域中有意义的专门的角色，不过还是用 string buffer 来实现的。</p>
+<p>It’s important to remember that this difference in design style is a key motivator for most mockists. TDD’s origins were a desire to get strong automatic regression testing that supported evolutionary design. Along the way its practitioners discovered that writing tests first made a significant improvement to the design process. Mockists have a strong idea of what kind of design is a good design and have developed mock libraries primarily to help people develop this design style.</p>
+<p>需要记住的很重要的一点是，设计方式上的这种不同对于大部分的 mockists 来说是一个很重要的驱动力。TDD 的初衷是自动的获取健壮的回归测试，来支持设计的演进。沿着这条路，它的实践者发现测试对设计过程产生了巨大的影响。Mockists 对什么样的设计是好的设计有非常强烈的见解，并且开发了 mock 的类库来帮助人们使用这种设计方式来开发软件。</p>
+<h3 id="我应该成为_classicist_还是_mockist_？(So_should_I_be_a_classicist_or_a_mockist?)">我应该成为 classicist 还是 mockist ？(So should I be a classicist or a mockist?)</h3><p>I find this a difficult question to answer with confidence. Personally I’ve always been a old fashioned classic TDDer and thus far I don’t see any reason to change. I don’t see any compelling benefits for mockist TDD, and am concerned about the consequences of coupling tests to implementation.</p>
+<p>我发现我没有自信回答这个困难的 问题。个人来说，我一直是一个不潮流的的 classic TDDer，至今为止我没看到任何需要改变的原因。我没有看到 mockist TDD 带来了任何非常明显的好处，反而有点担心这种耦合了实现的测试所带来的后果。</p>
+<p>This has particularly struck me when I’ve observed a mockist programmer. I really like the fact that while writing the test you focus on the result of the behavior, not how it’s done. A mockist is constantly thinking about how the SUT is going to be implemented in order to write the expectations. This feels really unnatural to me.</p>
+<p>当我观察了一个 mockist 程序员的工作后，有一点击败了我。我特别喜欢当写测试的时候，你会集中注意力在行为产生的结果上，而不是它如何实现的。为了写期望的值，一个 mockist 需要不断思考 SUT 应该如何实现，这种感觉我非常不爽。</p>
+<p>I also suffer from the disadvantage of not trying mockist TDD on anything more than toys. As I’ve learned from Test Driven Development itself, it’s often hard to judge a technique without trying it seriously. I do know many good developers who are very happy and convinced mockists. So although I’m still a convinced classicist, I’d rather present both arguments as fairly as I can so you can make your own mind up.</p>
+<p>我还没有在真实的项目上试过 mockist TDD，这种不利条件也让我有点痛苦。因为我通过测试驱动开发的方法学到了测试驱动开发，如果你没有认真试过的话，一般很难去判断一门技术的好坏。我认识很多好的开发是坚定的 mockist，因此虽然我是一个坚定的 classisist，我仍然会尽可能客观公平的列出这两种观点，让你自己决定要使用哪种方式。</p>
+<p>So if mockist testing sounds appealing to you, I’d suggest giving it a try. It’s particularly worth trying if you are having problems in some of the areas that mockist TDD is intended to improve. I see two main areas here. One is if you’re spending a lot of time debugging when tests fail because they aren’t breaking cleanly and telling you where the problem is. (You could also improve this by using classic TDD on finer-grained clusters.) The second area is if your objects don’t contain enough behavior, mockist testing may encourage the development team to create more behavior rich objects.</p>
+<p>因此，如果 mockist 测试听起来对你有吸引力的话，我建议不妨一试。如果你在 mockist TDD 想要改善的领域遇到一些问题的话，就特别值得试一试。我知道两个主要的领域，一个是如果测试废了，你花了大量的时间调试，因为测试没有清晰的告诉你哪里出问题了。（你也可以通过针对细粒度的对象组使用经典TDD的方法来改善这个问题。）第二个领域是如果你的对象没有包含足够的行为，mockist 测试会鼓励开发团队创建更多行为丰富的对象。</p>
+<h3 id="写在最火（Final_Thoughts）">写在最火（Final Thoughts）</h3><p>As interest in unit testing, the xunit frameworks and Test Driven Development has grown, more and more people are running into mock objects. A lot of the time people learn a bit about the mock object frameworks, without fully understanding the mockist/classical divide that underpins them. Whichever side of that divide you lean on, I think it’s useful to understand this difference in views. While you don’t have to be a mockist to find the mock frameworks handy, it is useful to understand the thinking that guides many of the design decisions of the software.</p>
+<p>单元测试的一个有趣之处在于，随着 xunit 框架和测试驱动开发的成熟，越来越多的人投入到了使用 mock 对象的方式中。在大量的实践中，人们学到了 mock 对象框架，而没有充分理解 mockist/classical 实质上的不同点。无论你倾向于哪一种方式，理解它们在观点上的不同都是很有用的。然而你并不一定要成为一个 mockist 来玩转 mock 框架，而是去理解测试如何指导软件设计决策的思想反而是大有裨益的。</p>
+<p>The purpose of this article was, and is, to point out these differences and to lay out the trade-offs between them. There is more to mockist thinking than I’ve had time to go into, particularly its consequences on design style. I hope that in the next few years we’ll see more written on this and that will deepen our understanding of the fascinating consequences of writing tests before the code.</p>
+<p>这篇文章的目的曾经，以及现在都是，指出这两种测试方式的不同，来表明他们自身的妥协（trade-off）的地方。对于 mockist 的思考，相比我研究的这些，还有更多的内容，特别是它对设计方式的影响。我希望在未来几年，我们可以看到更多使用这种方式写的测试代码，那会加深你理解在写代码前先写测试的这种迷人的方式。</p>
+<h3 id="深入阅读（Further_Reading）">深入阅读（Further Reading）</h3><p>For a thorough overview of xunit testing practice, keep an eye out for Gerard Meszaros’s forthcoming book (disclaimer: it’s in my series). He also maintains a <a href="http://xunitpatterns.com/" target="_blank" rel="external">web site</a> with the patterns from the book.</p>
+<p>想要透彻理解 xunit 测试实践，可以看一下 Gerard Meszaros 的新书(免责声明：这本在我的系列丛书中)。他也在维护一个<a href="http://xunitpatterns.com/" target="_blank" rel="external">网站</a>，包含这本书中的各种模式。</p>
+<p>To find out more about TDD, the first place to look is <a href="http://www.amazon.com/gp/product/0321146530%20?ie=UTF8&amp;tag=martinfowlerc-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321146530" target="_blank" rel="external">Kent’s book</a>.</p>
+<p>想要了解更多TDD的东西，可以先看 <a href="http://www.amazon.com/gp/product/0321146530%20?ie=UTF8&amp;tag=martinfowlerc-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321146530" target="_blank" rel="external">Kent’s book</a>。</p>
+<p>To find out more about the mockist style of testing, the best overall resource is <a href="http://www.amazon.com/gp/product/0321503627?ie=UTF8&amp;tag=martinfowlerc-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321503627" target="_blank" rel="external">Freeman &amp; Pryce</a>. The authors look after <a href="http://www.mockobjects.com/" target="_blank" rel="external">mockobjects.com</a>. In particular read the excellent <a href="http://www.mockobjects.com/files/mockrolesnotobjects.pdf" target="_blank" rel="external">OOPSLA paper</a>. For more on Behavior Driven Development, a different offshoot of TDD that is very mockist in style, start with Dan North’s <a href="http://dannorth.net/introducing-bdd/" target="_blank" rel="external">introduction</a>.</p>
+<p>想要了解 mockist 风格的测试，最好的全面的资源是 <a href="http://www.amazon.com/gp/product/0321503627?ie=UTF8&amp;tag=martinfowlerc-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0321503627" target="_blank" rel="external">Freeman &amp; Pryce</a>。作者在维护 <a href="http://www.mockobjects.com/" target="_blank" rel="external">mockobjects.com</a>。特别是读一下这篇牛逼的论文 <a href="http://www.mockobjects.com/files/mockrolesnotobjects.pdf" target="_blank" rel="external">OOPSLA paper</a>。想要了解更多 TDD 的一个非常 mockist 方式的分支 - 行为驱动开发的内容，可以从 Dan North 的 <a href="http://dannorth.net/introducing-bdd/" target="_blank" rel="external">introduction</a> 开始看。</p>
+<p>You can also find out more about these techniques by looking at the tool websites for <a href="http://www.jmock.org/" target="_blank" rel="external">jMock</a>, <a href="http://www.nmock.org/" target="_blank" rel="external">nMock</a>, <a href="http://www.easymock.org/" target="_blank" rel="external">EasyMock</a>, and the <a href="http://sourceforge.net/projects/easymocknet/" target="_blank" rel="external">.NET EasyMock</a>. (There are other mock tools out there, don’t consider this list to be complete.)</p>
+<p>你还可以看下关于这些技术的工具网站 <a href="http://www.jmock.org/" target="_blank" rel="external">jMock</a>，<a href="http://www.nmock.org/" target="_blank" rel="external">nMock</a>，<a href="http://www.easymock.org/" target="_blank" rel="external">EasyMock</a> 以及 <a href="http://sourceforge.net/projects/easymocknet/" target="_blank" rel="external">.NET EasyMock</a>。（还有很多其它的工具没有在这里列出，不要以为这个列表是完成的。）</p>
+<p>XP2000 saw the <a href="http://www.mockobjects.com/files/endotesting.pdf" target="_blank" rel="external">original mock objects paper</a>, but it’s rather outdated now.</p>
+<p>对于XP2000，可以看看<a href="http://www.mockobjects.com/files/endotesting.pdf" target="_blank" rel="external">original mock objects paper</a>，虽然已经相当过时了。</p>
+<h3 id="重大修正（Significant_Revisions）">重大修正（Significant Revisions）</h3><p><em>02 January 2007</em>: Split the original distinction of state-based versus interaction-based testing into two: state versus behavior verification and classic versus mockist TDD. I also made various vocabulary changes to bring it into line with Gerard Meszaros’s book of xunit patterns.</p>
+<p><em>08 July 2004</em>: First published</p>
+<hr>
+<hr>
+<p><strong> 笔者翻译部分完 </strong></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/09/10/test-pyramid/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">测试金字塔</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 3mi1yc@t
+    	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
