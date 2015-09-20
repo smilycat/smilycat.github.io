@@ -246,7 +246,7 @@ a {
 #container .left-col .overlay {
   width: 100%;
   height: 180px;
-  background-color: #567442;
+  background-color: #333;
   position: absolute;
 }
 #container .left-col .intrude-less {

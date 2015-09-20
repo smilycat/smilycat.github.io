@@ -4,7 +4,7 @@
   <subtitle><![CDATA[沉默的大多数喵]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blankpapers.com/"/>
-  <updated>2015-09-20T02:07:58.000Z</updated>
+  <updated>2015-09-20T04:28:39.000Z</updated>
   <id>http://blankpapers.com/</id>
   
   <author>
@@ -19,10 +19,8 @@
     <link href="http://blankpapers.com/2015/09/11/mocks-are-not-stubs/"/>
     <id>http://blankpapers.com/2015/09/11/mocks-are-not-stubs/</id>
     <published>2015-09-11T05:43:21.000Z</published>
-    <updated>2015-09-20T02:07:58.000Z</updated>
-    <content type="html"><![CDATA[<div style="text-align:center" markdown="1"><br><img src="/assets/img/mocks-and-stubs.png" alt="mock&amp;stub"><br></div>
-
-<p>最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。</p>
+    <updated>2015-09-20T04:28:39.000Z</updated>
+    <content type="html"><![CDATA[<p>最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。</p>
 <p>为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，我接着他的部分继续翻完，希望能给对测试有兴趣的同学一些启示。</p>
 <a id="more"></a>
 <h3 id="dennis-xlc翻译部分"><strong>dennis-xlc翻译部分</strong></h3><p><em>译者注： 本文是<a href="http://martinfowler.com/" target="_blank" rel="external">Martin Fowler</a>大神的<a href="http://martinfowler.com/articles/mocksArentStubs.html" target="_blank" rel="external">Mocks Aren’t Stubs</a>文章的中文翻译。由于该文是对mock对象和stub对象的探讨，故此译文中将不对mock和stub进行翻译，以避免混淆。</em></p>
@@ -134,9 +132,7 @@
 <p><strong> 笔者翻译部分完 </strong></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<div style="text-align:center" markdown="1"><br><img src="/assets/img/mocks-and-stubs.png" alt="mock&amp;stub"><br></div>
-
-<p>最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。</p>
+    <![CDATA[<p>最近在项目上做了一些跟测试相关的工作，这才发现以前的一些理论并不扎实，在跟别人吹牛的时候也容易被人问住，就找了一些旧文好好研究一下，看完后顿觉恍然大悟。</p>
 <p>为了让对测试有兴趣但英语不佳的同学能够快速理解这些测试方法，觉得应该好好翻译一下。在网上搜了一下译文，发现有哥们 dennis-xlc 已经翻译了部分，我接着他的部分继续翻完，希望能给对测试有兴趣的同学一些启示。</p>]]>
     
     </summary>
@@ -146,13 +142,12 @@
   </entry>
   
   <entry>
-    <title><![CDATA[测试金字塔]]></title>
+    <title><![CDATA[测试金字塔「译文」]]></title>
     <link href="http://blankpapers.com/2015/09/10/test-pyramid/"/>
     <id>http://blankpapers.com/2015/09/10/test-pyramid/</id>
     <published>2015-09-10T15:01:00.000Z</published>
-    <updated>2015-09-11T05:59:25.000Z</updated>
-    <content type="html"><![CDATA[<p><img src="/assets/img/pyramid.png" alt="测试金字塔">  </p>
-<p>原文: <a href="http://martinfowler.com/bliki/TestPyramid.html" target="_blank" rel="external">TestPyramid</a></p>
+    <updated>2015-09-20T04:36:05.000Z</updated>
+    <content type="html"><![CDATA[<p>原文: <a href="http://martinfowler.com/bliki/TestPyramid.html" target="_blank" rel="external">TestPyramid</a></p>
 <p>译文: <a href="http://zyzhang.github.io/blog/2013/04/28/test-pyramid/" target="_blank" rel="external">测试金字塔</a></p>
 <a id="more"></a>
 <p>补充引用点的译文</p>
@@ -165,8 +160,7 @@
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/assets/img/pyramid.png" alt="测试金字塔">  </p>
-<p>原文: <a href="http://martinfowler.com/bliki/TestPyramid.html">TestPyramid</a></p>
+    <![CDATA[<p>原文: <a href="http://martinfowler.com/bliki/TestPyramid.html">TestPyramid</a></p>
 <p>译文: <a href="http://zyzhang.github.io/blog/2013/04/28/test-pyramid/">测试金字塔</a></p>]]>
     
     </summary>
